@@ -1,0 +1,69 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: user_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - application_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - application_network
+    volumes:
+      - ./pgadmin/servers.json:/pgadmin4/servers.json
+      - ./pgadmin/pgpass:/pgpass
+
+  wiremock:
+    image: rodolpheche/wiremock
+    container_name: wiremock
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./wiremock/mappings:/home/wiremock/mappings
+    networks:
+      - application_network
+    command: ["--port", "8089"]
+
+  app:
+    container_name: app
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - wiremock
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/user_db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      MOCK_VIACEP_URL: wiremock:8089
+      JWT_KEY: mVnkPAzDjcc2Go/Hu6bh6NZTn/xqQnydd5OxLHScKxs=
+    networks:
+      - application_network
+
+volumes:
+  pgdata:
+
+networks:
+  application_network:
+    driver: bridge

@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/ws/02020202/json"
+  },
+  "response": {
+    "status": 200,
+    "body": "{\"cep\": \"02020-202\",\"logradouro\": \"Rua Exemplo 02\",\"bairro\": \"Centro 02\",\"localidade\": \"Cidade 02\",\"uf\": \"PE\",\"estado\": \"Pernambuco\"}",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
+  

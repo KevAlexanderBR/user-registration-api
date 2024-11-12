@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/ws/00000000/json"
+  },
+  "response": {
+    "status": 200,
+    "body": "{\"cep\": \"00000-000\",\"logradouro\": \"Rua Exemplo 00\",\"bairro\": \"Centro 00\",\"localidade\": \"Cidade 00\",\"uf\": \"RJ\",\"estado\": \"Rio de Janeiro\"}",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
